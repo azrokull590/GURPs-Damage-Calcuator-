@@ -1,12 +1,14 @@
 import pickle
+import os
+
 
 class Armor:
     
-    def __init__(self):
-        self.torso = float(input("Enter Torso Armor DR: "))
-        self.head = float(input("Enter Head Armor DR: "))
-        self.leg = float(input("Enter Leg Armor DR: "))
-        self.arm = float(input("Enter Arm Armor DR: "))
+    def __init__(self, torso, head, leg, arm):
+        self.torso = torso
+        self.head = head
+        self.leg = leg
+        self.arm = arm
         
     def print_stats(self):
         print("Head Armor: " + str(self.head))
@@ -15,27 +17,17 @@ class Armor:
         print("Leg Armor: " + str(self.leg))
 
 class Weapons:
-    def __init__(self):
-        self.name = input(" Weapon Name: ")
+    def __init__(self, name, weapon_pen, dr):
+        self.name = name
         self.damage = 1
         # self.weapon_bonus_damage = float(input(" Enter Weapon Bonus Damage:  "))
-        self.weapon_pen = input("What type of Weapon Penetration? "
-        "\n (pi-) Small piercing x0.5 "
-        "\n (pi)  piercing x1.0 "
-        "\n (cut) Cutting x1.5 "
-        "\n (pi+) Large piercing x1.5 "
-        "\n (imp) Impaling x2.0 "
-        "\n (pi++) Massive piercing x2.0 "
-        "\n (tox) Toxic x1.0 "
-        "\n (burn) Burn x1.0 "
-        "\n (cor) Corrosion x1.0 "
-        "\n (cr) Crushing x1.0 ")
-        self.dr = float(input(" Enter Armor Divsor:  "))
+        self.weapon_pen = weapon_pen
+        self.dr = dr
         
-    def print_stats(self, name):
-        print("============" + name + "'s Load Out============" )
+    def print_stats(self):
+  
         print("Weapon Name: " + self.name)
-        # print("Weapon Bonus Damage: " + str(self.weapon_bonus_damage))
+        #print("Weapon Bonus Damage: " + str(self.weapon_bonus_damage))
         print("Weapon Pen: " + self.weapon_pen)
         print("Armor Divsor: " + str(self.dr))
         
@@ -43,13 +35,13 @@ class Weapons:
 class gen_combat:
 
 
-    def __init__(self):
-        self.name = input(" Enter Character Name: ")
-        self.HP_max = float(input(" Enter Max HP: "))
-        self.HP_current = self.HP_max
-        self.STR = input("Enter Player Strength: ")
-        self.armor = Armor()
-        self.weapon = Weapons()
+    def __init__(self,name, HP_max, STR, armor, weapon):
+        self.name = name
+        self.HP_max = HP_max
+        self.HP_current = HP_max
+        self.STR = STR
+        self.armor = armor
+        self.weapon = weapon
         
     def print_stats(self):
         print("\n==========================================")
@@ -57,7 +49,7 @@ class gen_combat:
         print("Max HP/Current HP: " + str(self.HP_max)+ "/" +str(self.HP_current))
         print("Strength: " + self.STR)
         print("==========================================")
-        Weapons.print_stats(self.weapon, self.name)
+        Weapons.print_stats(self.weapon)
         Armor.print_stats(self.armor)
         
     def get_name(self):
@@ -85,19 +77,22 @@ def gen_char(master_player_list):
         
     return master_player_list
     
-def delete_entry(master_player_list): 
-    index = input("\n Which player would you like to delete?")
+def delete_entry(master_player_list):
+     
+    choice = " yup"
     
-    master_player_list.pop(int(index))
-    
-    choice = input("\n Do you wish to delete more characters? ")
-    
-    while(choice == "yes"):
+    while(choice != "exit"):
         
-        index = input("\n Which player would you like to delete?")
-        master_player_list.pop(int(index))
+        print_names(master_player_list)
+        choice = input("\n Input the player number of who you like to delete? Or type exit to leave ")
         
-        choice = input("\n Do you wish to add more characters? ")
+        if choice != "exit":
+            
+            index = int(choice) - 1
+            
+            master_player_list.pop(int(index))
+        
+
         
     return master_player_list
 
@@ -242,10 +237,17 @@ def save(master_player_list):
           
 def load(master_player_list):
     load = input("Name of the file to Load: ")
+    did_work = os.path.exists(load)
+    while did_work == False:
+        load = input(load + " does not exist, enter the correct name or exit to leave: ")
+        did_work = os.path.exists(load)
     with open(load, 'rb') as dehe:
-        #save01 = pickle.load(input)
-        #master_player_list.append(save01)
+        
+        
+       
+     
         newList = pickle.load(dehe)
+        print("Load Successful!")
     
     #return master_player_list
     return newList
