@@ -5,7 +5,8 @@ import class_list
 from combat import*
 
 
-
+#GURPS Damage Calc
+# By Alberto Alvarez
 
 
 
